@@ -1,7 +1,5 @@
 package ru.spbau.mit.softwaredesign.cli.parser;
 
-import ru.spbau.mit.softwaredesign.cli.errors.ErrorMessage;
-import ru.spbau.mit.softwaredesign.cli.errors.ExpectedExitException;
 import ru.spbau.mit.softwaredesign.cli.errors.UnknownExternalCommandException;
 import ru.spbau.mit.softwaredesign.cli.utils.BoundVariablesStorage;
 import ru.spbau.mit.softwaredesign.cli.commands.*;
@@ -38,8 +36,9 @@ public class BlockExecutor {
      * 2. First token declares a variable name and therefore the second token must be '='
      * 3. Otherwise, first token must refer to an external command
      * @param tokenList list of command line tokens (after substitutions)
+     * @return code that interprets result of command execution built from tokens list {@see AbstractCommand}
      */
-    public void execute(List<String> tokenList) throws ExpectedExitException, UnknownExternalCommandException {
+    public int execute(List<String> tokenList) throws UnknownExternalCommandException {
 
         List<String> trimmedTokenList = trimList(tokenList);
 
@@ -47,7 +46,7 @@ public class BlockExecutor {
             if (boundCommands.containsKey(trimmedTokenList.get(0))) {
                 AbstractCommand command = boundCommands.get(trimmedTokenList.get(0));
                 if (trimmedTokenList.size() == 1) {
-                    command.execute();
+                    return command.execute();
                 } else {
                     List<String> arguments = new ArrayList<>();
                     for (int i = 1; i < trimmedTokenList.size(); i++) {
@@ -55,7 +54,7 @@ public class BlockExecutor {
                             arguments.add(trimmedTokenList.get(i));
                         }
                     }
-                    command.execute(arguments);
+                    return command.execute(arguments);
                 }
             } else if (trimmedTokenList.size() > 1 && trimmedTokenList.get(1).equals(TokenizerHelper.assignmentOperator)) {
                 if (isCorrectVariableName(trimmedTokenList.get(0)) && trimmedTokenList.size() > 2) {
@@ -68,6 +67,7 @@ public class BlockExecutor {
                 ExternalCommand.execute(externalCommandInvocation);
             }
         }
+        return 0;
     }
 
     /**

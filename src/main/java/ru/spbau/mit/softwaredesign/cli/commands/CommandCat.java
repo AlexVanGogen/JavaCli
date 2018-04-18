@@ -26,10 +26,10 @@ public class CommandCat implements AbstractCommand {
      *  - if this is the first command in the pipeline, then repeat the following user input.
      *  - otherwise redirect data from input buffer to output buffer.
      *
-     * @throws IOException for the case of input/output error
+     * @return code that interprets result of command execution {@see AbstractCommand}
      */
     @Override
-    public void execute() {
+    public int execute() {
         if (BlockCounter.get() == 0) {
             try {
                 executeCatWithUserInput();
@@ -39,6 +39,7 @@ public class CommandCat implements AbstractCommand {
         } else {
             executeCatWithInputBuffer();
         }
+        return 0;
     }
 
     /**
@@ -46,9 +47,10 @@ public class CommandCat implements AbstractCommand {
      * Arguments have already been interpolated, so that is file names.
      *
      * @param filenames Files that "cat" must transfer to output.
+     * @return code that interprets result of command execution {@see AbstractCommand}
      */
     @Override
-    public void execute(List<String> filenames) {
+    public int execute(List<String> filenames) {
         Charset charset = Charset.forName("UTF-8");
         for (String filename : filenames) {
             try (BufferedReader reader = Files.newBufferedReader(Paths.get(filename), charset)) {
@@ -61,6 +63,7 @@ public class CommandCat implements AbstractCommand {
                 ErrorMessage.print(ErrorMessage.FILE_NOT_FOUND, "cat: " + filename);
             }
         }
+        return 0;
     }
 
     /**

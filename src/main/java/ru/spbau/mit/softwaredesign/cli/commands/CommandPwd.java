@@ -14,11 +14,14 @@ public class CommandPwd implements AbstractCommand {
     /**
      * Implements "pwd" function without parameters.
      * Produces the path to current directory
+     *
+     * @return code that interprets result of command execution {@see AbstractCommand}
      */
     @Override
-    public void execute() {
+    public int execute() {
         OutputBuffer.add(System.getProperty("user.dir"));
         OutputBuffer.add(System.getProperty("line.separator"));
+        return 0;
     }
 
     /**
@@ -27,9 +30,10 @@ public class CommandPwd implements AbstractCommand {
      * (as well as the same method without arguments).
      *
      * @param args Useless arguments of command
+     * @return code that interprets result of command execution {@see AbstractCommand}
      */
     @Override
-    public void execute(List<String> args) {
-        execute();
+    public int execute(List<String> args) {
+        return execute();
     }
 }

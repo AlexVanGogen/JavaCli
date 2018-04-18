@@ -1,7 +1,6 @@
 package ru.spbau.mit.softwaredesign.cli.parser;
 
-import ru.spbau.mit.softwaredesign.cli.errors.ErrorMessage;
-import ru.spbau.mit.softwaredesign.cli.errors.ExpectedExitException;
+import org.junit.Test;
 import ru.spbau.mit.softwaredesign.cli.errors.PipelineException;
 import ru.spbau.mit.softwaredesign.cli.errors.UnknownExternalCommandException;
 import ru.spbau.mit.softwaredesign.cli.pipe.BlockCounter;
@@ -9,7 +8,10 @@ import ru.spbau.mit.softwaredesign.cli.pipe.InputBuffer;
 import ru.spbau.mit.softwaredesign.cli.pipe.OutputBuffer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Class that transforms tokens stream to blocks and executes these blocks consequently.
@@ -37,27 +39,38 @@ public class ChainExecutor {
 
     /**
      * Execute blocks, transfer buffer data from the previous block to the next one.
+     * @return code that interprets result of chain commands execution built from tokens list {@see AbstractCommand, BlockExecutor}
      */
-    public void execute() throws PipelineException, ExpectedExitException, UnknownExternalCommandException {
+    public int execute() throws PipelineException, UnknownExternalCommandException {
         BlockExecutor blockExecutor = new BlockExecutor();
         for (List<String> nextBlock : tokenizedCommandChain) {
             OutputBuffer.redirectToInput();
             if (nextBlock.size() == 0) {
                 throw new PipelineException();
             }
-            blockExecutor.execute(nextBlock);
+            if (blockExecutor.execute(nextBlock) == -1) {
+                return -1;
+            }
             InputBuffer.flush();
             BlockCounter.increase();
         }
         OutputBuffer.print();
+        return 0;
     }
 
-    /**
-     * Explicitly get blocks. Need for testing.
-     * @return list of blocks
-     */
-    public List<List<String>> getTokenizedCommandChain() {
-        return tokenizedCommandChain;
+    public static class TokenizedCommandChainTest {
+
+        @Test
+        public void chaining_separates_tokens_list_to_blocks_by_pipe_symbol() {
+            List<String> tokens = Arrays.asList("1", " ", " ", "|", "2", "|", " ", "3", "|", " ", "4");
+            ChainExecutor executor = new ChainExecutor(tokens);
+            List<List<String>> blocks = executor.tokenizedCommandChain;
+            assertEquals(4, blocks.size());
+            assertEquals(3, blocks.get(0).size());
+            assertEquals(1, blocks.get(1).size());
+            assertEquals(2, blocks.get(2).size());
+            assertEquals(2, blocks.get(3).size());
+        }
     }
 
     /**

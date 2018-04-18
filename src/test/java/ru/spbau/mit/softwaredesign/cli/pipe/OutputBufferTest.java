@@ -29,23 +29,19 @@ public class OutputBufferTest {
     }
 
     @Test
-    public void add_operation_appends_new_string_to_the_buffer() {
+    public void add_operation_appends_new_string_to_the_buffer() throws IOException {
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i <= 100; i++) {
             OutputBuffer.add(String.valueOf(i));
             sb.append(String.valueOf(i));
         }
         OutputBuffer.print();
-        assertEquals(outContent.toString(), sb.toString());
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals(sb.toString(), outContent.toString());
+        outContent.close();
     }
 
     @Test
-    public void redirecting_to_input_moves_all_data() {
+    public void redirecting_to_input_moves_all_data() throws IOException {
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i <= 100; i++) {
             OutputBuffer.add(String.valueOf(i));
@@ -53,12 +49,8 @@ public class OutputBufferTest {
         }
         OutputBuffer.redirectToInput();
         OutputBuffer.print();
-        assertEquals(outContent.toString(), "");
-        assertEquals(InputBuffer.get(), sb.toString());
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals("", outContent.toString());
+        assertEquals(sb.toString(), InputBuffer.get());
+        outContent.close();
     }
 }

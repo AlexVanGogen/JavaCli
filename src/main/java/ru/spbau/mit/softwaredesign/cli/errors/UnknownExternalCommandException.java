@@ -9,10 +9,6 @@ public class UnknownExternalCommandException extends CliException {
 
     public UnknownExternalCommandException() {}
 
-    public UnknownExternalCommandException(String s) {
-        from = s;
-    }
-
     public String getFrom() {
         return from;
     }

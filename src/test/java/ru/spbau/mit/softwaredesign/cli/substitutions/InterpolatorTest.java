@@ -21,16 +21,12 @@ public class InterpolatorTest {
     }
 
     @Test
-    public void interpolating_simple_expression_inside_single_quotes_returns_expression_as_string() {
+    public void interpolating_simple_expression_inside_single_quotes_returns_expression_as_string() throws UncompletedLineException {
         List<String> testData = Arrays.asList("'", "1", " ", "6", " ", "9", "'");
-        try {
-            List<String> actualResult = interpolator.interpolate(testData);
-            StringJoiner joiner = new StringJoiner("");
-            actualResult.forEach(joiner::add);
-            assertEquals(joiner.toString(), "1 6 9");
-        } catch (UncompletedLineException e) {
-            e.printStackTrace();
-        }
+        List<String> actualResult = interpolator.interpolate(testData);
+        StringJoiner joiner = new StringJoiner("");
+        actualResult.forEach(joiner::add);
+        assertEquals("1 6 9", joiner.toString());
     }
 
     @Test(expected = UncompletedLineException.class)
@@ -40,16 +36,12 @@ public class InterpolatorTest {
     }
 
     @Test
-    public void interpolating_simple_expression_inside_double_quotes_returns_expression_as_string() {
+    public void interpolating_simple_expression_inside_double_quotes_returns_expression_as_string() throws UncompletedLineException {
         List<String> testData = Arrays.asList("\"", "1", " ", "4", " ", "7", "\"");
-        try {
-            List<String> actualResult = interpolator.interpolate(testData);
-            StringJoiner joiner = new StringJoiner("");
-            actualResult.forEach(joiner::add);
-            assertEquals(joiner.toString(), "1 4 7");
-        } catch (UncompletedLineException e) {
-            e.printStackTrace();
-        }
+        List<String> actualResult = interpolator.interpolate(testData);
+        StringJoiner joiner = new StringJoiner("");
+        actualResult.forEach(joiner::add);
+        assertEquals("1 4 7", joiner.toString());
     }
 
     @Test(expected = UncompletedLineException.class)
@@ -59,70 +51,50 @@ public class InterpolatorTest {
     }
 
     @Test
-    public void expanding_existing_variable_returns_its_value() {
+    public void expanding_existing_variable_returns_its_value() throws UncompletedLineException {
         BoundVariablesStorage.putVariable("x", "y");
         List<String> testData = Arrays.asList("$", "x");
-        try {
-            List<String> actualResult = interpolator.interpolate(testData);
-            assertEquals(actualResult.size(), 1);
-            assertEquals(actualResult.get(0), "y");
-        } catch (UncompletedLineException e) {
-            e.printStackTrace();
-        }
+        List<String> actualResult = interpolator.interpolate(testData);
+        assertEquals(1, actualResult.size());
+        assertEquals("y", actualResult.get(0));
     }
 
     @Test
-    public void expanding_not_existing_variable_returns_empty_string() {
+    public void expanding_not_existing_variable_returns_empty_string() throws UncompletedLineException {
         BoundVariablesStorage.putVariable("x", "y");
         List<String> testData = Arrays.asList("$", "z");
-        try {
-            List<String> actualResult = interpolator.interpolate(testData);
-            assertEquals(actualResult.size(), 1);
-            assertEquals(actualResult.get(0), "");
-        } catch (UncompletedLineException e) {
-            e.printStackTrace();
-        }
+        List<String> actualResult = interpolator.interpolate(testData);
+        assertEquals(1, actualResult.size());
+        assertEquals("", actualResult.get(0));
     }
 
     @Test
-    public void expanding_reference_sign_without_name_returns_the_same() {
+    public void expanding_reference_sign_without_name_returns_the_same() throws UncompletedLineException {
         List<String> testData = Arrays.asList("$", " ", "x");
-        try {
-            List<String> actualResult = interpolator.interpolate(testData);
-            assertEquals(actualResult.size(), 3);
-            assertEquals(actualResult.get(0), "$");
-            assertEquals(actualResult.get(1), " ");
-            assertEquals(actualResult.get(2), "x");
-        } catch (UncompletedLineException e) {
-            e.printStackTrace();
-        }
+        List<String> actualResult = interpolator.interpolate(testData);
+        assertEquals(3, actualResult.size());
+        assertEquals("$", actualResult.get(0));
+        assertEquals(" ", actualResult.get(1));
+        assertEquals("x", actualResult.get(2));
     }
 
     @Test
-    public void interpolating_expression_with_variable_reference_inside_single_quotes_returns_expression_as_string() {
+    public void interpolating_expression_with_variable_reference_inside_single_quotes_returns_expression_as_string() throws UncompletedLineException {
         BoundVariablesStorage.putVariable("x", "y");
         List<String> testData = Arrays.asList("'", "1", " ", "$", "x", "9", "'");
-        try {
-            List<String> actualResult = interpolator.interpolate(testData);
-            StringJoiner joiner = new StringJoiner("");
-            actualResult.forEach(joiner::add);
-            assertEquals(joiner.toString(), "1 $x9");
-        } catch (UncompletedLineException e) {
-            e.printStackTrace();
-        }
+        List<String> actualResult = interpolator.interpolate(testData);
+        StringJoiner joiner = new StringJoiner("");
+        actualResult.forEach(joiner::add);
+        assertEquals("1 $x9", joiner.toString());
     }
 
     @Test
-    public void interpolating_expression_with_variable_reference_inside_double_quotes_expands_variable() {
+    public void interpolating_expression_with_variable_reference_inside_double_quotes_expands_variable() throws UncompletedLineException {
         BoundVariablesStorage.putVariable("x", "y");
         List<String> testData = Arrays.asList("\"", "1", " ", "$", "x", "9", "\"");
-        try {
-            List<String> actualResult = interpolator.interpolate(testData);
-            StringJoiner joiner = new StringJoiner("");
-            actualResult.forEach(joiner::add);
-            assertEquals(joiner.toString(), "1 y9");
-        } catch (UncompletedLineException e) {
-            e.printStackTrace();
-        }
+        List<String> actualResult = interpolator.interpolate(testData);
+        StringJoiner joiner = new StringJoiner("");
+        actualResult.forEach(joiner::add);
+        assertEquals("1 y9", joiner.toString());
     }
 }

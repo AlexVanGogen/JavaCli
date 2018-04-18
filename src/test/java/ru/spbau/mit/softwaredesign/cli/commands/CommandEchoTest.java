@@ -50,26 +50,18 @@ public class CommandEchoTest {
     }
 
     @Test
-    public void echo_without_parameters_returns_empty_line() {
+    public void echo_without_parameters_returns_empty_line() throws IOException {
         commandEcho.execute();
         OutputBuffer.print();
         assertEquals(System.getProperty("line.separator"), outContent.toString());
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        outContent.close();
     }
 
     @Test
-    public void echo_with_string_parameters_returns_string_without_extra_whitespaces() {
+    public void echo_with_string_parameters_returns_string_without_extra_whitespaces() throws IOException {
         commandEcho.execute(testData);
         OutputBuffer.print();
         assertEquals(expectedData, outContent.toString());
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        outContent.close();
     }
 }

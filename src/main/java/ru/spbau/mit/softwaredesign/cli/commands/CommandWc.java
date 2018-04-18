@@ -34,10 +34,10 @@ public class CommandWc implements AbstractCommand {
      *  - if this is the first command in the pipeline, then calculate the user input.
      *  - otherwise calculate the input buffer.
      *
-     * @throws IOException for the case of input/output error
+     * @return code that interprets result of command execution {@see AbstractCommand}
      */
     @Override
-    public void execute() {
+    public int execute() {
         if (BlockCounter.get() == 0) {
             try {
                 calculateUserInput();
@@ -47,6 +47,7 @@ public class CommandWc implements AbstractCommand {
         } else {
             calculateInputBuffer();
         }
+        return 0;
     }
 
     /**
@@ -54,9 +55,10 @@ public class CommandWc implements AbstractCommand {
      * Arguments have already been interpolated, so that is file names.
      *
      * @param filenames Files given for calculating
+     * @return code that interprets result of command execution {@see AbstractCommand}
      */
     @Override
-    public void execute(List<String> filenames) {
+    public int execute(List<String> filenames) {
         Charset charset = Charset.forName("UTF-8");
         for (String filename : filenames) {
             WcCalculator nextFileCalculator = new WcCalculator();
@@ -76,6 +78,7 @@ public class CommandWc implements AbstractCommand {
             OutputBuffer.add(totalCalculator.dumpTotal());
             OutputBuffer.add(System.getProperty("line.separator"));
         }
+        return 0;
     }
 
     /**

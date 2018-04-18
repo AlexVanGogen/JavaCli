@@ -13,15 +13,15 @@ public class TokenizerHelperTest {
     public void tokenizing_must_return_all_tokens_including_delimiters() {
         String[] delimiters = new String[]{"\\.", "\\,", "\\-"};
         List<String> tokens = TokenizerHelper.tokenizeAndKeepDelimiters("a,b.c--d e", delimiters);
-        assertEquals(tokens.size(), 8);
-        assertEquals(tokens.get(0), "a");
-        assertEquals(tokens.get(1), ",");
-        assertEquals(tokens.get(2), "b");
-        assertEquals(tokens.get(3), ".");
-        assertEquals(tokens.get(4), "c");
-        assertEquals(tokens.get(5), "-");
-        assertEquals(tokens.get(6), "-");
-        assertEquals(tokens.get(7), "d e");
+        assertEquals(8, tokens.size());
+        assertEquals("a", tokens.get(0));
+        assertEquals(",", tokens.get(1));
+        assertEquals("b", tokens.get(2));
+        assertEquals(".", tokens.get(3));
+        assertEquals("c", tokens.get(4));
+        assertEquals("-", tokens.get(5));
+        assertEquals("-", tokens.get(6));
+        assertEquals("d e", tokens.get(7));
     }
 
     @Test
@@ -30,6 +30,6 @@ public class TokenizerHelperTest {
         List<String> tokens = TokenizerHelper.tokenizeAndKeepDelimiters("a,b.c--d e", delimiters);
         StringJoiner joiner = new StringJoiner("");
         tokens.forEach(joiner::add);
-        assertEquals(joiner.toString(), "a,b.c--d e");
+        assertEquals("a,b.c--d e", joiner.toString());
     }
 }

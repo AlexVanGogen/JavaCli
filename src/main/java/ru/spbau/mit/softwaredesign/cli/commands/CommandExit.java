@@ -1,6 +1,5 @@
 package ru.spbau.mit.softwaredesign.cli.commands;
 
-import ru.spbau.mit.softwaredesign.cli.errors.ExpectedExitException;
 import ru.spbau.mit.softwaredesign.cli.pipe.OutputBuffer;
 
 import java.util.List;
@@ -16,14 +15,14 @@ public class CommandExit implements AbstractCommand {
      * Implements "exit" function without parameters.
      * Shutdowns the program.
      *
-     * @throws ExpectedExitException as signal of normal exiting
+     * @return code that interprets result of command execution {@see AbstractCommand}
      */
     @Override
-    public void execute() throws ExpectedExitException {
+    public int execute() {
         OutputBuffer.add("bye. and don't write to me anymore...");
         OutputBuffer.add(System.getProperty("line.separator"));
         OutputBuffer.print();
-        throw new ExpectedExitException();
+        return -1;
     }
 
     /**
@@ -33,10 +32,10 @@ public class CommandExit implements AbstractCommand {
      *
      * @param args Useless arguments of command
      *
-     * @throws ExpectedExitException as signal of normal exiting
+     * @return code that interprets result of command execution {@see AbstractCommand}
      */
     @Override
-    public void execute(List<String> args) throws ExpectedExitException {
-        execute();
+    public int execute(List<String> args) {
+        return execute();
     }
 }

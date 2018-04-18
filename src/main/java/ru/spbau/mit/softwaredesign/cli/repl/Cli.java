@@ -3,7 +3,6 @@ package ru.spbau.mit.softwaredesign.cli.repl;
 import ru.spbau.mit.softwaredesign.cli.errors.*;
 import ru.spbau.mit.softwaredesign.cli.parser.ChainExecutor;
 import ru.spbau.mit.softwaredesign.cli.parser.InputLineTokenizer;
-import ru.spbau.mit.softwaredesign.cli.parser.BlockExecutor;
 import ru.spbau.mit.softwaredesign.cli.pipe.OutputBuffer;
 import ru.spbau.mit.softwaredesign.cli.substitutions.Interpolator;
 
@@ -36,13 +35,14 @@ public class Cli {
                 continue;
 
             try {
-                execute(nextLine);
+                int returnCode = execute(nextLine);
+                if (returnCode == -1) {
+                    return;
+                }
             } catch (PipelineException e) {
                 ErrorMessage.print(ErrorMessage.PIPELINE_SYNTAX_ERROR, "<pipe>");
             } catch (UnknownExternalCommandException e) {
                 ErrorMessage.print(ErrorMessage.COMMAND_NOT_FOUND, e.getFrom());
-            } catch (ExpectedExitException e) {
-                return;
             } catch (UncompletedLineException e) {
                 ErrorMessage.print(ErrorMessage.SYNTAX_ERROR, "<interpreter>");
                 continue;
@@ -55,8 +55,9 @@ public class Cli {
     /**
      * Handle prompt: tokenize, interpolate, and execute it.
      * @param nextLine new prompt
+     * @return code that interprets result of command execution {@see AbstractCommand, ChainExecutor}
      */
-    public static void execute(String nextLine) throws UnknownExternalCommandException, PipelineException, ExpectedExitException, UncompletedLineException {
+    public static int execute(String nextLine) throws UnknownExternalCommandException, PipelineException, UncompletedLineException {
         List<String> tokens = InputLineTokenizer.tokenize(nextLine);
 
         /* Interpolate prompt */
@@ -66,7 +67,7 @@ public class Cli {
 
         /* Execute prompt */
         ChainExecutor chainExecutor = new ChainExecutor(interpolatedTokens);
-        chainExecutor.execute();
+        return chainExecutor.execute();
     }
 
     public static void main(String[] args) {

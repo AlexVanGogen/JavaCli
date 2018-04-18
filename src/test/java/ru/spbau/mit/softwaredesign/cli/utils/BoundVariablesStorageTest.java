@@ -22,7 +22,7 @@ public class BoundVariablesStorageTest {
     public void add_new_key_value_entry_and_get_value_by_key_must_return_value() {
         BoundVariablesStorage.putVariable(key, value);
         assertTrue(BoundVariablesStorage.tryFetch(key).isPresent());
-        assertEquals(BoundVariablesStorage.tryFetch(key).get(), value);
+        assertEquals(value, BoundVariablesStorage.tryFetch(key).get());
     }
 
     @Test

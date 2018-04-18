@@ -37,26 +37,18 @@ public class CommandPwdTest {
     }
 
     @Test
-    public void pwd_without_parameters_returns_current_directory() {
+    public void pwd_without_parameters_returns_current_directory() throws IOException {
         commandPwd.execute();
         OutputBuffer.print();
         assertEquals(expectedData, outContent.toString());
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        outContent.close();
     }
 
     @Test
-    public void echo_with_string_parameters_returns_string_without_extra_whitespaces() {
+    public void echo_with_string_parameters_returns_string_without_extra_whitespaces() throws IOException {
         commandPwd.execute(pwdParameters);
         OutputBuffer.print();
         assertEquals(expectedData, outContent.toString());
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        outContent.close();
     }
 }

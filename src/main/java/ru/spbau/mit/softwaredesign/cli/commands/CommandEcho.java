@@ -1,6 +1,5 @@
 package ru.spbau.mit.softwaredesign.cli.commands;
 
-import ru.spbau.mit.softwaredesign.cli.pipe.InputBuffer;
 import ru.spbau.mit.softwaredesign.cli.pipe.OutputBuffer;
 import ru.spbau.mit.softwaredesign.cli.utils.TokenizerHelper;
 
@@ -17,10 +16,12 @@ public class CommandEcho implements AbstractCommand {
     /**
      * Implements "echo" function without parameters.
      * Produces empty string.
+     * @return code that interprets result of command execution {@see AbstractCommand}
      */
     @Override
-    public void execute() {
+    public int execute() {
         OutputBuffer.add(System.getProperty("line.separator"));
+        return 0;
     }
 
     /**
@@ -28,9 +29,10 @@ public class CommandEcho implements AbstractCommand {
      * Interprets all arguments as one string, but ignores extra whitespaces.
      *
      * @param args Arguments of command
+     * @return code that interprets result of command execution {@see AbstractCommand}
      */
     @Override
-    public void execute(List<String> args) {
+    public int execute(List<String> args) {
         StringJoiner joiner = new StringJoiner(" ");
         for (String nextArgument: args) {
             if (!nextArgument.equals(TokenizerHelper.whitespace))
@@ -38,5 +40,6 @@ public class CommandEcho implements AbstractCommand {
         }
         OutputBuffer.add(joiner.toString());
         OutputBuffer.add(System.getProperty("line.separator"));
+        return 0;
     }
 }

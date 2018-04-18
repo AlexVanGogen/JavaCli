@@ -16,7 +16,6 @@ public class ExternalCommand {
     /**
      * Executes external command in the original way.
      * @param command external command with all parameters
-     * @return result of command execution
      */
     public static void execute(String command) throws UnknownExternalCommandException {
         StringBuilder executionOutput = new StringBuilder();

@@ -3,7 +3,6 @@ package ru.spbau.mit.softwaredesign.cli.parser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import ru.spbau.mit.softwaredesign.cli.errors.ExpectedExitException;
 import ru.spbau.mit.softwaredesign.cli.errors.UnknownExternalCommandException;
 import ru.spbau.mit.softwaredesign.cli.pipe.InputBuffer;
 import ru.spbau.mit.softwaredesign.cli.pipe.OutputBuffer;
@@ -40,15 +39,15 @@ public class BlockExecutorTest {
     }
 
     @Test
-    public void assignment_makes_new_record_in_storage() throws ExpectedExitException, UnknownExternalCommandException {
+    public void assignment_makes_new_record_in_storage() throws UnknownExternalCommandException {
         List<String> tokens = Arrays.asList("x", "=", "y");
         executor.execute(tokens);
         assertTrue(BoundVariablesStorage.tryFetch("x").isPresent());
-        assertEquals(BoundVariablesStorage.tryFetch("x").get(), "y");
+        assertEquals("y", BoundVariablesStorage.tryFetch("x").get());
     }
 
     @Test(expected = UnknownExternalCommandException.class)
-    public void incorrect_assignment_is_treated_as_external_command() throws ExpectedExitException, UnknownExternalCommandException {
+    public void incorrect_assignment_is_treated_as_external_command() throws UnknownExternalCommandException {
         List<String> tokens = Arrays.asList("zzz", " ", "=", "y");
         executor.execute(tokens);
         assertFalse(BoundVariablesStorage.tryFetch("zzz").isPresent());
@@ -67,20 +66,16 @@ public class BlockExecutorTest {
     public void trimming_removes_leading_and_trailing_whitespaces() {
         List<String> tokens = Arrays.asList(" ", " ", " ", "a", " ");
         List<String> trimmedTokens = executor.trimList(tokens);
-        assertEquals(trimmedTokens.size(), 1);
-        assertEquals(trimmedTokens.get(0), "a");
+        assertEquals(1, trimmedTokens.size());
+        assertEquals("a", trimmedTokens.get(0));
     }
 
     @Test
-    public void redefined_command_is_recognized_and_arguments_are_calculated() throws ExpectedExitException, UnknownExternalCommandException {
+    public void redefined_command_is_recognized_and_arguments_are_calculated() throws UnknownExternalCommandException, IOException {
         List<String> tokens = Arrays.asList("cat", " ", " ", "cattest.txt", " ", "cattest2.txt");
         executor.execute(tokens);
         OutputBuffer.print();
-        assertEquals(outContent.toString(), testData + testData);
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals(testData + testData, outContent.toString());
+        outContent.close();
     }
 }

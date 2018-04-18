@@ -23,7 +23,7 @@ public class BlockCounterTest {
         for (int i = 0; i < 100; i++) {
             int previousValue = BlockCounter.get();
             BlockCounter.increase();
-            assertEquals(BlockCounter.get(), previousValue + 1);
+            assertEquals(previousValue + 1, BlockCounter.get());
         }
     }
 }

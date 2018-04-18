@@ -25,7 +25,7 @@ public class InputBufferTest {
             InputBuffer.add(String.valueOf(i));
             sb.append(String.valueOf(i));
         }
-        assertEquals(InputBuffer.get().length(), 192);
-        assertEquals(InputBuffer.get(), sb.toString());
+        assertEquals(192, InputBuffer.get().length());
+        assertEquals(sb.toString(), InputBuffer.get());
     }
 }

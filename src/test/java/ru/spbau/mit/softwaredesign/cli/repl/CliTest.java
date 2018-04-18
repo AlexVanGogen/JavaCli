@@ -34,39 +34,27 @@ public class CliTest {
     }
 
     @Test
-    public void assignment_x_and_the_following_reference_call_return_value_of_x() throws CliException {
+    public void assignment_x_and_the_following_reference_call_return_value_of_x() throws CliException, IOException {
         Cli.execute("x=1");
         Cli.execute("echo $x");
-        assertEquals(outContent.toString(), "1" + System.getProperty("line.separator"));
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals("1" + System.getProperty("line.separator"), outContent.toString());
+        outContent.close();
     }
 
     @Test
-    public void echo_with_parameter_inside_single_quotes_prints_raw_parameter() throws CliException {
+    public void echo_with_parameter_inside_single_quotes_prints_raw_parameter() throws CliException, IOException {
         Cli.execute("x=1");
         Cli.execute("echo 'abc$x'");
-        assertEquals(outContent.toString(), "abc$x" + System.getProperty("line.separator"));
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals("abc$x" + System.getProperty("line.separator"), outContent.toString());
+        outContent.close();
     }
 
     @Test
-    public void echo_with_parameter_inside_double_quotes_substitutes_variables() throws CliException {
+    public void echo_with_parameter_inside_double_quotes_substitutes_variables() throws CliException, IOException {
         Cli.execute("x=1");
         Cli.execute("echo \"abc$x\"");
-        assertEquals(outContent.toString(), "abc1" + System.getProperty("line.separator"));
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals("abc1" + System.getProperty("line.separator"), outContent.toString());
+        outContent.close();
     }
 
     @Test(expected = UnknownExternalCommandException.class)
@@ -80,7 +68,7 @@ public class CliTest {
     }
 
     @Test
-    public void assignment_command_inside_single_quotes_to_variable_gives_correct_command_call() throws CliException, FileNotFoundException {
+    public void assignment_command_inside_single_quotes_to_variable_gives_correct_command_call() throws CliException, IOException {
         String filename = "cattest.txt";
         PrintWriter out = new PrintWriter(filename);
         out.write(testData);
@@ -88,16 +76,12 @@ public class CliTest {
 
         Cli.execute("x='cat cattest.txt'");
         Cli.execute("$x");
-        assertEquals(outContent.toString(), testData);
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals(testData, outContent.toString());
+        outContent.close();
     }
 
     @Test
-    public void assignment_command_inside_double_quotes_to_variable_gives_correct_command_call() throws CliException, FileNotFoundException {
+    public void assignment_command_inside_double_quotes_to_variable_gives_correct_command_call() throws CliException, IOException {
         String filename = "cattest.txt";
         PrintWriter out = new PrintWriter(filename);
         out.write(testData);
@@ -105,16 +89,12 @@ public class CliTest {
 
         Cli.execute("x=\"cat cattest.txt\"");
         Cli.execute("$x");
-        assertEquals(outContent.toString(), testData);
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals(testData, outContent.toString());
+        outContent.close();
     }
 
     @Test
-    public void many_cats_in_a_row_makes_no_effects() throws FileNotFoundException, CliException {
+    public void many_cats_in_a_row_makes_no_effects() throws IOException, CliException {
         String filename = "cattest.txt";
         PrintWriter out = new PrintWriter(filename);
         out.write(testData);
@@ -129,15 +109,11 @@ public class CliTest {
         assertEquals(expectedWcData + " " + filename + System.getProperty("line.separator")
                 + expectedWcData + " " + filename2 + System.getProperty("line.separator")
                 + expectedWcTotal + " total" + System.getProperty("line.separator"), outContent.toString());
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        outContent.close();
     }
 
     @Test
-    public void pwd_as_the_last_block_prints_only_current_directory() throws CliException, FileNotFoundException {
+    public void pwd_as_the_last_block_prints_only_current_directory() throws CliException, IOException {
         String filename = "cattest.txt";
         PrintWriter out = new PrintWriter(filename);
         out.write(testData);
@@ -149,33 +125,21 @@ public class CliTest {
         out.close();
 
         Cli.execute("wc cattest.txt cattest2.txt | cat | cat | cat|cat|    cat  |  cat | pwd");
-        assertEquals(outContent.toString(), System.getProperty("user.dir") + System.getProperty("line.separator"));
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals(System.getProperty("user.dir") + System.getProperty("line.separator"), outContent.toString());
+        outContent.close();
     }
 
     @Test
-    public void quotes_inside_double_quotes_are_common_symbols() throws UncompletedLineException, ExpectedExitException, UnknownExternalCommandException, PipelineException {
+    public void quotes_inside_double_quotes_are_common_symbols() throws UncompletedLineException, UnknownExternalCommandException, PipelineException, IOException {
         Cli.execute("echo \"'blah-blah'\"");
-        assertEquals(outContent.toString(), "'blah-blah'" + System.getProperty("line.separator"));
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals("'blah-blah'" + System.getProperty("line.separator"), outContent.toString());
+        outContent.close();
     }
 
     @Test
-    public void quotes_inside_single_quotes_are_common_symbols() throws UncompletedLineException, ExpectedExitException, UnknownExternalCommandException, PipelineException {
+    public void quotes_inside_single_quotes_are_common_symbols() throws UncompletedLineException, UnknownExternalCommandException, PipelineException, IOException {
         Cli.execute("echo '\"blah-blah\"'");
-        assertEquals(outContent.toString(), "\"blah-blah\"" + System.getProperty("line.separator"));
-        try {
-            outContent.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals("\"blah-blah\"" + System.getProperty("line.separator"), outContent.toString());
+        outContent.close();
     }
 }
