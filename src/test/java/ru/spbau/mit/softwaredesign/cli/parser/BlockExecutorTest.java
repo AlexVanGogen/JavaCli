@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ru.spbau.mit.softwaredesign.cli.errors.UnknownExternalCommandException;
+import ru.spbau.mit.softwaredesign.cli.pipe.BlockInfo;
 import ru.spbau.mit.softwaredesign.cli.pipe.InputBuffer;
 import ru.spbau.mit.softwaredesign.cli.pipe.OutputBuffer;
 import ru.spbau.mit.softwaredesign.cli.utils.BoundVariablesStorage;
@@ -41,7 +42,7 @@ public class BlockExecutorTest {
     @Test
     public void assignment_makes_new_record_in_storage() throws UnknownExternalCommandException {
         List<String> tokens = Arrays.asList("x", "=", "y");
-        executor.execute(tokens);
+        executor.execute(new BlockInfo(tokens, 0, 1));
         assertTrue(BoundVariablesStorage.tryFetch("x").isPresent());
         assertEquals("y", BoundVariablesStorage.tryFetch("x").get());
     }
@@ -49,7 +50,7 @@ public class BlockExecutorTest {
     @Test(expected = UnknownExternalCommandException.class)
     public void incorrect_assignment_is_treated_as_external_command() throws UnknownExternalCommandException {
         List<String> tokens = Arrays.asList("zzz", " ", "=", "y");
-        executor.execute(tokens);
+        executor.execute(new BlockInfo(tokens, 0, 1));
         assertFalse(BoundVariablesStorage.tryFetch("zzz").isPresent());
     }
 
@@ -73,7 +74,7 @@ public class BlockExecutorTest {
     @Test
     public void redefined_command_is_recognized_and_arguments_are_calculated() throws UnknownExternalCommandException, IOException {
         List<String> tokens = Arrays.asList("cat", " ", " ", "cattest.txt", " ", "cattest2.txt");
-        executor.execute(tokens);
+        executor.execute(new BlockInfo(tokens, 0, 1));
         OutputBuffer.print();
         assertEquals(testData + testData, outContent.toString());
         outContent.close();

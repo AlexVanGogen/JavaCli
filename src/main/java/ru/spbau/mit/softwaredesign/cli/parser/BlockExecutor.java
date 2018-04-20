@@ -1,6 +1,7 @@
 package ru.spbau.mit.softwaredesign.cli.parser;
 
 import ru.spbau.mit.softwaredesign.cli.errors.UnknownExternalCommandException;
+import ru.spbau.mit.softwaredesign.cli.pipe.BlockInfo;
 import ru.spbau.mit.softwaredesign.cli.utils.BoundVariablesStorage;
 import ru.spbau.mit.softwaredesign.cli.commands.*;
 import ru.spbau.mit.softwaredesign.cli.resourses.MainCommands;
@@ -35,16 +36,22 @@ public class BlockExecutor {
      * 1. First token refers to one of the main commands (e.g. cat, echo, wc, pwd, exit)
      * 2. First token declares a variable name and therefore the second token must be '='
      * 3. Otherwise, first token must refer to an external command
-     * @param tokenList list of command line tokens (after substitutions)
+     * @param blockInfo description of block {@link BlockInfo}
      * @return code that interprets result of command execution built from tokens list {@see AbstractCommand}
      */
-    public int execute(List<String> tokenList) throws UnknownExternalCommandException {
+    public int execute(BlockInfo blockInfo) throws UnknownExternalCommandException {
 
-        List<String> trimmedTokenList = trimList(tokenList);
+        List<String> trimmedTokenList = trimList(blockInfo.getTokensList());
 
         if (trimmedTokenList.size() != 0) {
             if (boundCommands.containsKey(trimmedTokenList.get(0))) {
                 AbstractCommand command = boundCommands.get(trimmedTokenList.get(0));
+
+                if (command instanceof CommandCat) {
+                    ((CommandCat) command).passInfo(blockInfo);
+                } else if (command instanceof CommandWc) {
+                    ((CommandWc) command).passInfo(blockInfo);
+                }
                 if (trimmedTokenList.size() == 1) {
                     return command.execute();
                 } else {

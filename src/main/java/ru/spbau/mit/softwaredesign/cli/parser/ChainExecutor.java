@@ -3,7 +3,7 @@ package ru.spbau.mit.softwaredesign.cli.parser;
 import org.junit.Test;
 import ru.spbau.mit.softwaredesign.cli.errors.PipelineException;
 import ru.spbau.mit.softwaredesign.cli.errors.UnknownExternalCommandException;
-import ru.spbau.mit.softwaredesign.cli.pipe.BlockCounter;
+import ru.spbau.mit.softwaredesign.cli.pipe.BlockInfo;
 import ru.spbau.mit.softwaredesign.cli.pipe.InputBuffer;
 import ru.spbau.mit.softwaredesign.cli.pipe.OutputBuffer;
 
@@ -21,20 +21,22 @@ import static org.junit.Assert.assertEquals;
 public class ChainExecutor {
 
     private List<List<String>> tokenizedCommandChain;
+    private int numberOfCurrentBlock;
+    private int countOfAllBlocks;
 
     /**
      * Construct chain of blocks.
      * @param tokens input tokens list
      */
     public ChainExecutor(List<String> tokens) {
-        BlockCounter.reset();
         if (tokens.size() == 0)
             return;
 
         tokenizedCommandChain = new ArrayList<>();
 
         makeChain(tokens);
-        BlockCounter.setMaxValue(tokenizedCommandChain.size());
+        countOfAllBlocks = tokenizedCommandChain.size();
+        numberOfCurrentBlock = 0;
     }
 
     /**
@@ -44,15 +46,18 @@ public class ChainExecutor {
     public int execute() throws PipelineException, UnknownExternalCommandException {
         BlockExecutor blockExecutor = new BlockExecutor();
         for (List<String> nextBlock : tokenizedCommandChain) {
+
+            BlockInfo blockInfo = new BlockInfo(nextBlock, numberOfCurrentBlock, countOfAllBlocks);
+
             OutputBuffer.redirectToInput();
             if (nextBlock.size() == 0) {
                 throw new PipelineException();
             }
-            if (blockExecutor.execute(nextBlock) == -1) {
+            if (blockExecutor.execute(blockInfo) == -1) {
                 return -1;
             }
             InputBuffer.flush();
-            BlockCounter.increase();
+            numberOfCurrentBlock++;
         }
         OutputBuffer.print();
         return 0;

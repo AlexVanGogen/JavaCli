@@ -1,7 +1,7 @@
 package ru.spbau.mit.softwaredesign.cli.commands;
 
 import ru.spbau.mit.softwaredesign.cli.errors.ErrorMessage;
-import ru.spbau.mit.softwaredesign.cli.pipe.BlockCounter;
+import ru.spbau.mit.softwaredesign.cli.pipe.BlockInfo;
 import ru.spbau.mit.softwaredesign.cli.pipe.InputBuffer;
 import ru.spbau.mit.softwaredesign.cli.pipe.OutputBuffer;
 
@@ -18,7 +18,17 @@ import java.util.List;
  */
 public class CommandCat implements AbstractCommand {
 
+    private BlockInfo currentBlockInfo;
+
     public CommandCat() {}
+
+    /**
+     * Set block information {@see BlockInfo} to executor.
+     * @param blockInfo information about the block where the command has been called
+     */
+    public void passInfo(BlockInfo blockInfo) {
+        this.currentBlockInfo = blockInfo;
+    }
 
     /**
      * Implements "cat" function without parameters.
@@ -30,7 +40,7 @@ public class CommandCat implements AbstractCommand {
      */
     @Override
     public int execute() {
-        if (BlockCounter.get() == 0) {
+        if (currentBlockInfo.getRelativePosition() == BlockInfo.SpecificPosition.FIRST_BLOCK) {
             try {
                 executeCatWithUserInput();
             } catch (IOException e) {
@@ -84,7 +94,7 @@ public class CommandCat implements AbstractCommand {
             }
             OutputBuffer.add(nextLine);
             OutputBuffer.add(System.getProperty("line.separator"));
-            if (BlockCounter.hasReachedMaximum()) {
+            if (currentBlockInfo.getRelativePosition() == BlockInfo.SpecificPosition.LAST_BLOCK) {
                 OutputBuffer.print();
             }
         }

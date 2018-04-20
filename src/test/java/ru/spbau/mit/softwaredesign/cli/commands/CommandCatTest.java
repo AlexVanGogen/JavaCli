@@ -3,6 +3,7 @@ package ru.spbau.mit.softwaredesign.cli.commands;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import ru.spbau.mit.softwaredesign.cli.pipe.BlockInfo;
 import ru.spbau.mit.softwaredesign.cli.pipe.InputBuffer;
 import ru.spbau.mit.softwaredesign.cli.pipe.OutputBuffer;
 
@@ -23,6 +24,7 @@ public class CommandCatTest {
     public void setUp() {
         testData = "hello world" + System.getProperty("line.separator") + "i'm alive" + System.getProperty("line.separator");
         commandCat = new CommandCat();
+        commandCat.passInfo(new BlockInfo(Collections.emptyList(), 0, 1));
         System.setOut(new PrintStream(outContent));
     }
 

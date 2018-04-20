@@ -3,6 +3,7 @@ package ru.spbau.mit.softwaredesign.cli.commands;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import ru.spbau.mit.softwaredesign.cli.pipe.BlockInfo;
 import ru.spbau.mit.softwaredesign.cli.pipe.InputBuffer;
 import ru.spbau.mit.softwaredesign.cli.pipe.OutputBuffer;
 
@@ -27,6 +28,7 @@ public class CommandWcTest {
         expectedData = "\t2\t4\t22";
         expectedTotal = "\t4\t8\t44";
         commandWc = new CommandWc();
+        commandWc.passInfo(new BlockInfo(Collections.emptyList(), 0, 1));
         System.setOut(new PrintStream(outContent));
     }
 

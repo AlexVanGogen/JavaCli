@@ -1,7 +1,7 @@
 package ru.spbau.mit.softwaredesign.cli.commands;
 
 import ru.spbau.mit.softwaredesign.cli.errors.ErrorMessage;
-import ru.spbau.mit.softwaredesign.cli.pipe.BlockCounter;
+import ru.spbau.mit.softwaredesign.cli.pipe.BlockInfo;
 import ru.spbau.mit.softwaredesign.cli.pipe.InputBuffer;
 import ru.spbau.mit.softwaredesign.cli.pipe.OutputBuffer;
 
@@ -23,9 +23,18 @@ import java.util.regex.Pattern;
 public class CommandWc implements AbstractCommand {
 
     private WcCalculator totalCalculator;
+    private BlockInfo currentBlockInfo;
 
     public CommandWc() {
         totalCalculator = new WcCalculator();
+    }
+
+    /**
+     * Set block information {@see BlockInfo} to executor.
+     * @param blockInfo information about the block where the command has been called
+     */
+    public void passInfo(BlockInfo blockInfo) {
+        this.currentBlockInfo = blockInfo;
     }
 
     /**
@@ -38,7 +47,7 @@ public class CommandWc implements AbstractCommand {
      */
     @Override
     public int execute() {
-        if (BlockCounter.get() == 0) {
+        if (currentBlockInfo.getRelativePosition() == BlockInfo.SpecificPosition.FIRST_BLOCK) {
             try {
                 calculateUserInput();
             } catch (IOException e) {
