@@ -1,7 +1,5 @@
 package ru.spbau.mit.softwaredesign.cli.pipe;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 import java.util.List;
 
 /**
