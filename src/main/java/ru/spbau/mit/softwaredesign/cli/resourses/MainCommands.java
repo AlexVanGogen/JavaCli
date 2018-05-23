@@ -9,4 +9,5 @@ public class MainCommands {
     public static final String COMMAND_WC = "wc";
     public static final String COMMAND_PWD = "pwd";
     public static final String COMMAND_EXIT = "exit";
+    public static final String COMMAND_GREP = "grep";
 }

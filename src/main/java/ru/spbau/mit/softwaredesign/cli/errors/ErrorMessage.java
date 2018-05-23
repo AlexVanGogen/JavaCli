@@ -10,6 +10,7 @@ public class ErrorMessage {
     public static final String SYNTAX_ERROR = "syntax error";
     public static final String PIPELINE_SYNTAX_ERROR = "syntax error near pipeline";
     public static final String IO_ERROR = "unexpected input/output error";
+    public static final String PARSE_ERROR = "cannot parse input";
 
     /**
      * Prints error message to console.

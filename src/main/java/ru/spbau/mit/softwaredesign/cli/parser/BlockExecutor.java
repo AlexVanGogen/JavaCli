@@ -26,6 +26,7 @@ public class BlockExecutor {
         boundCommands.put(MainCommands.COMMAND_WC, new CommandWc());
         boundCommands.put(MainCommands.COMMAND_PWD, new CommandPwd());
         boundCommands.put(MainCommands.COMMAND_EXIT, new CommandExit());
+        boundCommands.put(MainCommands.COMMAND_GREP, new CommandGrep());
     }
 
     /**
@@ -51,6 +52,8 @@ public class BlockExecutor {
                     ((CommandCat) command).passInfo(blockInfo);
                 } else if (command instanceof CommandWc) {
                     ((CommandWc) command).passInfo(blockInfo);
+                } else if (command instanceof CommandGrep) {
+                    ((CommandGrep) command).passInfo(blockInfo);
                 }
                 if (trimmedTokenList.size() == 1) {
                     return command.execute();

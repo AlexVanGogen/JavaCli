@@ -37,6 +37,20 @@ public class BlockInfo {
         }
     }
 
+    /**
+     * @return true if block is the first in chain
+     */
+    public boolean isFirstBlock() {
+        return getRelativePosition() == SpecificPosition.SINGLE_BLOCK || getRelativePosition() == SpecificPosition.FIRST_BLOCK;
+    }
+
+    /**
+     * @return true if block is the last in chain
+     */
+    public boolean isLastBlock() {
+        return getRelativePosition() == SpecificPosition.SINGLE_BLOCK || getRelativePosition() == SpecificPosition.LAST_BLOCK;
+    }
+
     public List<String> getTokensList() {
         return tokensList;
     }
